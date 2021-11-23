@@ -1,0 +1,1 @@
+[object Object]Here is result from first file: Hello this is first text fileHere is result from first file appending: Hello this is first text file
