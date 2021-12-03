@@ -18,6 +18,10 @@
 // npm init -y (everything default)
 
 
+//if loading from package.json for the first time to start the project (for example git clone from remote repo)
+npm install 
+
+
 
 ### About git
 …or push an existing repository from the command line
@@ -27,3 +31,50 @@ git push -u origin main
 
 to start using git
   git init
+
+
+to create another branch
+ git branch <name>
+ git checkout <name>
+ git push -u origin <name>
+
+to delete another branch local
+    git branch -D <branch name>  (force delete before marging)
+    git branch -d <branch name> (delete after merging back to main branch)
+
+to delete another branch remote
+    git push -u origin --delete <branch name>
+
+
+### nodemon
+npm i nodemon -D   (only for development and not for production) (pm2 can be used for restarting app in production)
+in package.json 
+    script
+        change from -     "test": "echo \"Error: no test specified\" && exit 1"
+        change to -  "start": "node app.js",
+                     "dev": "nodemon app.js"
+
+        you can run using npm start   or npm run dev
+
+
+### Event loop
+
+### Events
+
+### Streams
+    for large file
+    fileStream.pipe() for writing in chunks
+
+
+### Node express sample project from  https://www.johnsmilga.com/projects  (find node express project)
+git clone https://github.com/john-smilga/node-express-course.git
+remove git folder from the project
+    mac: rm -rf .git
+    window: rmdir -Force -Recurse .git
+    window: rd /s/q.git
+
+
+### Routes parameters
+### Query string parameters
+### Express Router
+### Express Controller
