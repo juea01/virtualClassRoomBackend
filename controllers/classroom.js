@@ -1,12 +1,12 @@
 var path = require('path');
-var Classroom = require(path.join('..','model','classroom.js'));
+var ClassRoom = require(path.join('..','model','classroom.js'));
 var Timetable = require(path.join('..','model','timetable.js'));
 const util = require('util');
 
 
 const getClassrooms = (req,res,next)=>{
 
-    Classroom.find({}).exec(function(error,classrooms){
+    ClassRoom.find({}).populate('teacher').populate('timeTable').exec(function(error,classrooms){
         if(error) {
             return next(error);
         }
@@ -59,7 +59,7 @@ const saveTimetable = (req, callback)=> {
 
 const saveClassroom = (req, timetable, callback)=> {
     console.log("save class room entry");
-    var classroom = new Classroom({
+    var classroom = new ClassRoom({
         timeTable: timetable,
         subject:  req.body.subject,
         category: req.body.category,

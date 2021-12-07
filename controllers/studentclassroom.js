@@ -1,10 +1,10 @@
 var path = require('path');
-var StudentClassroom = require(path.join('..','model','studentclassroom.js'));
+var StudentClassRoom = require(path.join('..','model','studentclassroom.js'));
 
 
 const getStudentClassrooms = (req,res,next)=>{
 
-    StudentClassroom.find({}).exec(function(error,studentclassrooms){
+    StudentClassRoom.find({}).populate('student').populate('classroom').exec(function(error,studentclassrooms){
         if(error) {
             return next(error);
         }
@@ -16,20 +16,55 @@ const getStudentClassrooms = (req,res,next)=>{
 
 
 const createStudentClassroom = (req,res,next) => {
-    var studentClassroom = new StudentClassroom({
+    var studentClassroom = new StudentClassRoom({
         student:  req.body.student,
         classroom: req.body.classroom,
         adminDecision: req.body.adminDecision,
     });
 
-    studentClassroom.save(function(err){
+    studentClassroom.save(function(err,data){
         if(err){
             return next(err);
         } else {
-            res.status(201).json({message:'StudentClassroom has been successfully created'});
+           // data.populate('student').execPopulate();
+            //data.populate('classroom').execPopulate();
+
+            StudentClassRoom.findOne({student: data.student, classroom: data.classroom}).populate('student').populate('classroom').exec(function(error,studentclassrooms){
+                if(error) {
+                    return next(error);
+                }
+        
+                res.status(201).json(studentclassrooms);
+            });
+            
         }
     });
 }
+
+
+const updateStudentClassroom = (req,res,next) => {
+   
+
+    StudentClassRoom.findByIdAndUpdate(req.body._id,{ adminDecision: req.body.adminDecision},(function(err,data){
+        if(err){
+            return next(err);
+        } else {
+           // data.populate('student').execPopulate();
+            //data.populate('classroom').execPopulate();
+
+            StudentClassRoom.findOne({_id: req.body._id}).populate('student').populate('classroom').exec(function(error,studentclassrooms){
+                if(error) {
+                    return next(error);
+                }
+        
+                res.status(200).json(studentclassrooms);
+            });
+            
+        }
+    }));
+}
+
+
 
 
 
@@ -40,6 +75,7 @@ const createStudentClassroom = (req,res,next) => {
 
 module.exports = {
     getStudentClassrooms,
-    createStudentClassroom
+    createStudentClassroom,
+    updateStudentClassroom
     //getClassroomByName
 };
