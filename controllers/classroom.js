@@ -70,13 +70,13 @@ const saveClassroom = (req, timetable, callback)=> {
     
     });
 
-    classroom.save(function(err){
+    classroom.save(function(err, data){
         if(err){
             // return next(err);
             return callback(new Error(err),null);
         } else {
-            
-            return callback(null,'Classroom has been successfully created');
+        
+            return callback(null,data);
         }
     });
 }
@@ -94,8 +94,17 @@ const createClassroom = (req,res,next) => {
 const createroom = async(req,res,next) =>{
     try {
         const timetable = await saveTimetablePromise(req);
-        const message = await saveClassroomPromise(req, timetable);
-        res.status(201).json({message: message});
+        const message = res.status(201).json(await saveClassroomPromise(req, timetable));
+        console.log("message"+message);
+        ClassRoom.findOne({ _id: message}).populate('teacher').populate('timeTable').exec(function(error,classroom){
+            if(error) {
+                return next(error);
+            }
+    
+            res.status(201).json(classroom);
+           //return callback(null,classroom);
+        });
+       
     } catch (error) {
         return next(error);
     }
