@@ -59,6 +59,7 @@ const saveTimetable = (req, callback)=> {
 
 const saveClassroom = (req, timetable, callback)=> {
     console.log("save class room entry");
+    console.log("teacher",req.body.teacher.name);
     var classroom = new ClassRoom({
         timeTable: timetable,
         subject:  req.body.subject,
@@ -94,9 +95,10 @@ const createClassroom = (req,res,next) => {
 const createroom = async(req,res,next) =>{
     try {
         const timetable = await saveTimetablePromise(req);
-        const message = res.status(201).json(await saveClassroomPromise(req, timetable));
-        console.log("message"+message);
-        ClassRoom.findOne({ _id: message}).populate('teacher').populate('timeTable').exec(function(error,classroom){
+        const message = await saveClassroomPromise(req, timetable);
+        //console.log("message"+message);
+        //res.status(201).json(message);
+        ClassRoom.findOne({ _id: message._id}).populate('teacher').populate('timeTable').exec(function(error,classroom){
             if(error) {
                 return next(error);
             }
